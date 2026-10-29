@@ -1,0 +1,25 @@
+# Local development only. Do not expose the debugger to a public interface.
+services:
+  deepsearch:
+    image: multimodal-image-search:debug
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command:
+      - sh
+      - -c
+      - pip install debugpy -t /tmp && python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "127.0.0.1:8080:8000"
+      - "127.0.0.1:5678:5678"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    networks:
+      - milvus
+
+networks:
+  milvus:
+    external: true
+    name: milvus

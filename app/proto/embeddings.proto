@@ -1,0 +1,37 @@
+syntax = "proto3";          // Sử dụng cú pháp proto3
+package embeddings;         // Package tên embeddings
+
+// Định nghĩa service gRPC
+service EmbeddingService {
+  rpc Insert (InsertRequest) returns (InsertResponse);  // API Insert
+  rpc Search (SearchRequest) returns (SearchResponse);  // API Search
+}
+
+// Request khi insert dữ liệu
+message InsertRequest {
+  string text = 1;   // Text gốc
+}
+
+// Response khi insert
+message InsertResponse {
+  bool success = 1;   // Thành công hay không
+  string message = 2; // Thông báo
+}
+
+// Request khi search
+message SearchRequest {
+  string query = 1;   // Câu truy vấn
+  int32 top_k = 2;    // Số lượng kết quả trả về
+}
+
+// Kết quả search
+message SearchResult {
+  string id = 1;        // ID bản ghi
+  float score = 2;      // Độ giống (similarity score)
+  string metadata = 3;  // Thông tin bổ sung
+}
+
+// Response khi search
+message SearchResponse {
+  repeated SearchResult results = 1;  // Danh sách kết quả
+}
